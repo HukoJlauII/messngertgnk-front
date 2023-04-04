@@ -2,9 +2,38 @@ import {FormInput} from "../components/FormInput";
 import logo from "../assets/img/logo.png"
 import {FormButton} from "../components/FormButton";
 import {RememberMe} from "../components/RememberMe";
-import {NavLink} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
+import {observer} from "mobx-react-lite";
+import {useContext, useState} from "react";
+import {Context} from "../index";
+import {login} from "../http/userAPI";
 
-export function Login() {
+export const Login = observer(() => {
+    const {user} = useContext(Context)
+    const [username, setUsername] = useState();
+    const [password, setPassword] = useState();
+    const navigate = useNavigate();
+
+    const logout = () => {
+        localStorage.removeItem('token')
+        localStorage.clear()
+        user.setUser({})
+        user.setIsAuth(false)
+        console.log(user)
+    }
+    const signIn = async () => {
+        let response
+        try {
+            response = await login(username, password)
+            console.log(response)
+            user.setUser(response)
+            user.setIsAuth(true)
+            navigate('/home')
+        } catch (e) {
+
+        }
+
+    }
     return (
         <div>
             <main>
@@ -31,17 +60,20 @@ export function Login() {
                                                 <p className="text-center small">Enter your personal details to create
                                                     account</p>
                                             </div>
-                                            <form className="row g-3 needs-validation" method="post">
-                                                <FormInput name={"Username"}/>
-                                                <FormInput name={"Password"}/>
+                                            <div className="row g-3 needs-validation">
+                                                <FormInput name={"Username"} value={username}
+                                                           setter={e => setUsername(e.target.value)}/>
+                                                <FormInput name={"Password"} value={password}
+                                                           setter={e => setPassword(e.target.value)}/>
                                                 <RememberMe/>
-                                                <FormButton action={"Login"}/>
+                                                <FormButton action={"Login"} submit={signIn}/>
+                                                <FormButton action={"Logout"} submit={logout}/>
                                                 <div className="col-12">
                                                     <p className="small mb-0">Don't have account? <NavLink
                                                         to="/register">Create
                                                         an account</NavLink></p>
                                                 </div>
-                                            </form>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -56,4 +88,4 @@ export function Login() {
 
         </div>
     );
-}
+})

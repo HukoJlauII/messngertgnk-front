@@ -1,6 +1,6 @@
 import logo from "../assets/img/logo.png";
 import {FormInput} from "../components/FormInput";
-import {NavLink} from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import {registration} from "../http/userAPI";
 import {useState} from "react";
 import {FormButton} from "../components/FormButton";
@@ -13,9 +13,55 @@ export function Register() {
     const [email, setEmail] = useState();
     const [password, setPassword] = useState();
     const [passwordConfirm, setPasswordConfirm] = useState();
-    const signIn = async () => {
-        const response = await registration()
-        console.log(response)
+    const [nameError, setNameError] = useState()
+    const [surnameError, setSurnameError] = useState();
+    const [usernameError, setUsernameError] = useState();
+    const [emailError, setEmailError] = useState();
+    const [passwordError, setPasswordError] = useState();
+    const [passwordConfirmError, setPasswordConfirmError] = useState();
+    const navigate = useNavigate()
+    console.log(localStorage.getItem('token'))
+    const signUp = async () => {
+        const response = await registration(name, surname, username, email, password, passwordConfirm)
+            .then((res) => {
+                    navigate('/login')
+                    console.log(res)
+
+                }
+            )
+            .catch((err) => {
+                    err.response.data.forEach(fieldError => {
+                        switch (fieldError.field) {
+                            case 'name': {
+                                setNameError(fieldError.defaultMessage)
+                                break;
+                            }
+                            case 'surname': {
+                                setSurnameError(fieldError.defaultMessage)
+                                break;
+                            }
+                            case 'username': {
+                                setUsernameError(fieldError.defaultMessage)
+                                break;
+                            }
+                            case 'email': {
+                                setEmailError(fieldError.defaultMessage)
+                                break;
+                            }
+                            case 'password': {
+                                setPasswordError(fieldError.defaultMessage)
+                                break;
+                            }
+                            case 'passwordConfirm': {
+                                setPasswordConfirmError(fieldError.defaultMessage)
+                                break;
+                            }
+                        }
+                    })
+
+
+                }
+            )
     }
 
     return (
@@ -43,25 +89,26 @@ export function Register() {
                                             <p className="text-center small">Enter your personal details to create
                                                 account</p>
                                         </div>
-                                        <form className="row g-3 needs-validation">
-                                            <FormInput name={"Name"} value={name}
+                                        <div className="row g-3 needs-validation">
+                                            <FormInput name={"Name"} value={name} error={nameError}
                                                        setter={e => setName(e.target.value)}/>
-                                            <FormInput name={"Surname"} value={surname}
+                                            <FormInput name={"Surname"} value={surname} error={surnameError}
                                                        setter={e => setSurname(e.target.value)}/>
-                                            <FormInput name={"Email"} value={email}
+                                            <FormInput name={"Email"} value={email} error={emailError}
                                                        setter={e => setEmail(e.target.value)}/>
-                                            <FormInput name={"Username"} value={username}
+                                            <FormInput name={"Username"} value={username} error={usernameError}
                                                        setter={e => setUsername(e.target.value)}/>
-                                            <FormInput name={"Password"} value={password}
+                                            <FormInput name={"Password"} value={password} error={passwordError}
                                                        setter={e => setPassword(e.target.value)}/>
                                             <FormInput name={"Password Confirm"} value={passwordConfirm}
+                                                       error={passwordConfirmError}
                                                        setter={e => setPasswordConfirm(e.target.value)}/>
-                                            <FormButton action={"Create Account"} submit={signIn} />
+                                            <FormButton action={"Create Account"} submit={signUp}/>
                                             <div className="col-12">
                                                 <p className="small mb-0">Already have an account? <NavLink to="/login">Log
                                                     in</NavLink></p>
                                             </div>
-                                        </form>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

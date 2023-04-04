@@ -8,11 +8,11 @@ export default class UserStore {
         makeAutoObservable(this)
     }
 
-    set isAuth(value) {
+    setIsAuth(value) {
         this._isAuth = value;
     }
 
-    set user(value) {
+    setUser(value) {
         this._user = value;
     }
 

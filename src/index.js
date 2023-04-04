@@ -7,11 +7,11 @@ import UserStore from "./store/UserStore";
 export const Context = createContext(null)
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
-    <Context.Provider value={{user: new UserStore()}}>
-        <React.StrictMode>
+    <React.StrictMode>
+        <Context.Provider value={{user: new UserStore()}}>
             <App/>
-        </React.StrictMode>
-    </Context.Provider>
+        </Context.Provider>
+    </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

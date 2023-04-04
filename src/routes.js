@@ -6,13 +6,13 @@ import UserProfile from "./pages/UserProfile";
 export const authRoutes = [
 
     {
-        path: '/',
+        path: '/home',
         Component: ChatPage
     },
     {
         path: '/profile',
         Component: UserProfile
-    }
+    },
 ]
 
 export const publicRoutes = [
