@@ -10,7 +10,7 @@ export const ChatPage= observer( () => {
     const logout = () => {
         localStorage.removeItem('token')
         user.setUser({})
-        user.isAuth(false)
+        user.setIsAuth(false)
     }
     return (
         <div>
