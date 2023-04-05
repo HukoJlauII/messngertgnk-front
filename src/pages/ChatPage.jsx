@@ -3,6 +3,7 @@ import {NavLink} from "react-router-dom";
 import {useContext} from "react";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
+import logo from "../assets/img/logo.png"
 
 export const ChatPage= observer( () => {
     const {user} = useContext(Context)
@@ -17,10 +18,10 @@ export const ChatPage= observer( () => {
 
                 <div className="d-flex align-items-center justify-content-between">
                     <NavLink to="/home" className="logo d-flex align-items-center">
-                        <img src="../assets/img/logo.png" alt=""/>
+                        <img src={logo} alt=""/>
                         <span className="d-none d-lg-block">MyChat</span>
                     </NavLink>
-                    {/*<i className="bi bi-list toggle-sidebar-btn"></i>*/}
+                    <i className="bi bi-list toggle-sidebar-btn"></i>
                 </div>
 
 

@@ -9,7 +9,9 @@ import {ChatPage} from "./pages/ChatPage";
 import {Login} from "./pages/Login";
 import {Register} from "./pages/Register";
 import {observer} from "mobx-react-lite";
-
+import "./assets/js/main.js"
+import "./assets/css/chat.css"
+import "./assets/vendor/bootstrap-icons/bootstrap-icons.css"
 const App = observer(() => {
     const {user} = useContext(Context)
     useEffect(() => {
@@ -27,7 +29,7 @@ const App = observer(() => {
             <BrowserRouter>
                 <Routes>
                     {/*<Route path={"*"} Component={Login}/>*/}
-                    {user.isAuth && <Route path="/home" Component={ChatPage}/>}
+                    { <Route path="/home" Component={ChatPage}/>}
                     {<Route path={"/" + user.isAuth} Component={ChatPage}/>}
                     <Route path={"/login"} Component={Login}/>
                     <Route path={"/register"} Component={Register}/>
