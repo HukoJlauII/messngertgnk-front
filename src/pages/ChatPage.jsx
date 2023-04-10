@@ -3,116 +3,17 @@ import {NavLink} from "react-router-dom";
 import {useContext} from "react";
 import {Context} from "../index";
 import {observer} from "mobx-react-lite";
-import logo from "../assets/img/logo.png"
+import {Header} from "../components/Header";
+import {SideBar} from "../components/SideBar";
 
-export const ChatPage= observer( () => {
+export const ChatPage = observer(() => {
     const {user} = useContext(Context)
-    const logout = () => {
-        localStorage.removeItem('token')
-        user.setUser({})
-        user.setIsAuth(false)
-    }
+
     return (
         <div>
-            <header id="header" className="header fixed-top d-flex align-items-center">
+            <Header/>
 
-                <div className="d-flex align-items-center justify-content-between">
-                    <NavLink to="/home" className="logo d-flex align-items-center">
-                        <img src={logo} alt=""/>
-                        <span className="d-none d-lg-block">MyChat</span>
-                    </NavLink>
-                    <i className="bi bi-list toggle-sidebar-btn"></i>
-                </div>
-
-
-                <nav className="header-nav ms-auto">
-                    <ul className="d-flex align-items-center">
-
-
-                        <li className="nav-item dropdown pe-3">
-
-                            <NavLink className="nav-link nav-profile d-flex align-items-center pe-0" to="#"
-                                     data-bs-toggle="dropdown">
-                                <img src='https://bootdey.com/img/Content/avatar/avatar6.png' alt="Profile"
-                                     className="rounded-circle"/>
-                                <span className="d-none d-md-block dropdown-toggle ps-2"
-                                >username</span>
-                            </NavLink>
-
-                            <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
-                                <li className="dropdown-header">
-                                    <h6>name + surname</h6>
-                                    <span>Web Designer</span>
-                                </li>
-                                <li>
-                                    <hr className="dropdown-divider"/>
-                                </li>
-
-                                <li>
-                                    <NavLink className="dropdown-item d-flex align-items-center" to="/profile">
-                                        <i className="bi bi-person"></i>
-                                        <span>My Profile</span>
-                                    </NavLink>
-                                </li>
-                                <li>
-                                    <hr className="dropdown-divider"/>
-                                </li>
-
-                                <li>
-                                    <NavLink className="dropdown-item d-flex align-items-center"
-                                             to="/profile#edit-profile">
-                                        <i className="bi bi-gear"></i>
-                                        <span>Account Settings</span>
-                                    </NavLink>
-                                </li>
-                                <li>
-                                    <hr className="dropdown-divider"/>
-                                </li>
-
-                                <li>
-                                    <NavLink className="dropdown-item d-flex align-items-center" onClick={logout}
-                                             to="/login">
-                                        <i className="bi bi-box-arrow-right"></i>
-                                        <span>Sign Out</span>
-                                    </NavLink>
-                                </li>
-
-                            </ul>
-
-                        </li>
-
-
-                    </ul>
-                </nav>
-
-
-            </header>
-
-
-            <aside id="sidebar" className="sidebar">
-
-                <ul className="sidebar-nav" id="sidebar-nav">
-
-                    <li className="nav-item">
-                        <NavLink className="nav-link " to="/">
-                            <i className="bi bi-chat"></i>
-                            <span>Chat page</span>
-                        </NavLink>
-                    </li>
-
-
-                    <li className="nav-heading">Pages</li>
-
-                    <li className="nav-item">
-                        <NavLink className="nav-link collapsed" to="/profile">
-                            <i className="bi bi-person"></i>
-                            <span>Profile</span>
-                        </NavLink>
-                    </li>
-
-                </ul>
-
-            </aside>
+            <SideBar active={"Chat page"}/>
 
             <main id="main" className="main">
 
@@ -152,7 +53,7 @@ export const ChatPage= observer( () => {
                                                                          className="input-group rounded mb-3">
                                                                         <input type="search"
                                                                                className="form-control rounded"
-                                                                               placeholder="Search" aria-label="Search"
+                                                                               placeholder="Поиск" aria-label="Search"
                                                                                aria-describedby="search-addon"/>
                                                                         <span className="input-group-text border-0"
                                                                               id="search-addon">
@@ -283,76 +184,76 @@ export const ChatPage= observer( () => {
                                                                 </div>
                                                                 <div id="noChat" className="col-xxl-0 col-xl-12 h-50">
 
-                                                                    <div className="card info-card customers-card">
+                                                                    <div className="">
 
 
                                                                         <div className="card-body border-bottom">
-                                                                            <h5 className="card-title text center">Создать
-                                                                                новую
-                                                                                комнату</h5>
+                                                                            {/*<h5 className="card-title text center">Создать*/}
+                                                                            {/*    новую*/}
+                                                                            {/*    комнату</h5>*/}
 
-                                                                            <div
-                                                                                className="d-flex align-items-center justify-content-around">
-                                                                                <div
-                                                                                    className="card-icon rounded-circle d-flex align-items-center justify-content-center"
-                                                                                    data-bs-target="#verticalycentered"
-                                                                                    data-bs-toggle="modal">
-                                                                                    <i className="bi bi-plus"></i>
-                                                                                </div>
-                                                                                <div className="modal fade"
-                                                                                     id="verticalycentered"
-                                                                                     tabIndex="-1">
-                                                                                    <div
-                                                                                        className="modal-dialog modal-dialog-centered modal-lg">
-                                                                                        <div className="modal-content">
-                                                                                            <div
-                                                                                                className="modal-header">
-                                                                                                <h5 className="modal-title">Создание
-                                                                                                    комнаты</h5>
-                                                                                                <button type="button"
-                                                                                                        className="btn-close"
-                                                                                                        data-bs-dismiss="modal"
-                                                                                                        aria-label="Close"></button>
-                                                                                            </div>
-                                                                                            <div className="modal-body">
-                                                                                                <form>
-                                                                                                    <div
-                                                                                                        className="row mb-3">
-                                                                                                        <label
-                                                                                                            className="col-sm-2 col-form-label">Название
-                                                                                                            комнаты</label>
-                                                                                                        <div
-                                                                                                            className="col-sm-10">
-                                                                                                            <input
-                                                                                                                type="text"
-                                                                                                                className="form-control"
-                                                                                                                placeholder="Введите название комнаты..."/>
-                                                                                                        </div>
-                                                                                                    </div>
+                                                                            {/*<div*/}
+                                                                            {/*    className="d-flex align-items-center justify-content-around">*/}
+                                                                            {/*    <div*/}
+                                                                            {/*        className="card-icon rounded-circle d-flex align-items-center justify-content-center"*/}
+                                                                            {/*        data-bs-target="#verticalycentered"*/}
+                                                                            {/*        data-bs-toggle="modal">*/}
+                                                                            {/*        <i className="bi bi-plus"></i>*/}
+                                                                            {/*    </div>*/}
+                                                                            {/*    <div className="modal fade"*/}
+                                                                            {/*         id="verticalycentered"*/}
+                                                                            {/*         tabIndex="-1">*/}
+                                                                            {/*        <div*/}
+                                                                            {/*            className="modal-dialog modal-dialog-centered modal-lg">*/}
+                                                                            {/*            <div className="modal-content">*/}
+                                                                            {/*                <div*/}
+                                                                            {/*                    className="modal-header">*/}
+                                                                            {/*                    <h5 className="modal-title">Создание*/}
+                                                                            {/*                        комнаты</h5>*/}
+                                                                            {/*                    <button type="button"*/}
+                                                                            {/*                            className="btn-close"*/}
+                                                                            {/*                            data-bs-dismiss="modal"*/}
+                                                                            {/*                            aria-label="Close"></button>*/}
+                                                                            {/*                </div>*/}
+                                                                            {/*                <div className="modal-body">*/}
+                                                                            {/*                    <form>*/}
+                                                                            {/*                        <div*/}
+                                                                            {/*                            className="row mb-3">*/}
+                                                                            {/*                            <label*/}
+                                                                            {/*                                className="col-sm-2 col-form-label">Название*/}
+                                                                            {/*                                комнаты</label>*/}
+                                                                            {/*                            <div*/}
+                                                                            {/*                                className="col-sm-10">*/}
+                                                                            {/*                                <input*/}
+                                                                            {/*                                    type="text"*/}
+                                                                            {/*                                    className="form-control"*/}
+                                                                            {/*                                    placeholder="Введите название комнаты..."/>*/}
+                                                                            {/*                            </div>*/}
+                                                                            {/*                        </div>*/}
 
 
-                                                                                                </form>
-                                                                                                <div
-                                                                                                    className="modal-footer">
-                                                                                                    <button
-                                                                                                        type="button"
-                                                                                                        className="btn btn-secondary"
-                                                                                                        data-bs-dismiss="modal">
-                                                                                                        Отмена
-                                                                                                    </button>
-                                                                                                    <button
-                                                                                                        type="button"
-                                                                                                        className="btn btn-primary"
-                                                                                                    >
-                                                                                                        Создать комнату
-                                                                                                    </button>
-                                                                                                </div>
-                                                                                            </div>
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
+                                                                            {/*                    </form>*/}
+                                                                            {/*                    <div*/}
+                                                                            {/*                        className="modal-footer">*/}
+                                                                            {/*                        <button*/}
+                                                                            {/*                            type="button"*/}
+                                                                            {/*                            className="btn btn-secondary"*/}
+                                                                            {/*                            data-bs-dismiss="modal">*/}
+                                                                            {/*                            Отмена*/}
+                                                                            {/*                        </button>*/}
+                                                                            {/*                        <button*/}
+                                                                            {/*                            type="button"*/}
+                                                                            {/*                            className="btn btn-primary"*/}
+                                                                            {/*                        >*/}
+                                                                            {/*                            Создать комнату*/}
+                                                                            {/*                        </button>*/}
+                                                                            {/*                    </div>*/}
+                                                                            {/*                </div>*/}
+                                                                            {/*            </div>*/}
+                                                                            {/*        </div>*/}
+                                                                            {/*    </div>*/}
 
-                                                                            </div>
+                                                                            {/*</div>*/}
                                                                             <div
                                                                                 className=" row card-body align-items-center justify-content-around"
                                                                                 style={{height: '600px'}}>
@@ -376,42 +277,7 @@ export const ChatPage= observer( () => {
                                         </div>
                                     </div>
                                 </section>
-                                <div className="modal fade" id="largeModal" tabIndex="-1" style={{display: 'none'}}
-                                     aria-hidden="true">
-                                    <div className="modal-dialog modal-lg">
-                                        <div className="modal-content">
-                                            <div className="modal-header">
-                                                <h5 className="modal-title">Участники</h5>
-                                                <button type="button" className="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
-                                            </div>
-                                            <div className="modal-body">
-                                                <li className="p-2 border-bottom"><NavLink to="#!"
-                                                                                           className="d-flex justify-content-between">
-                                                    <div className="d-flex flex-row">
-                                                        <div>
-                                                            <img
-                                                                src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava1-bg.webp"
-                                                                alt="avatar" className="d-flex align-self-center me-3"
-                                                                width="60"/>
-                                                            <span className="badge bg-success badge-dot"></span>
-                                                        </div>
-                                                        <div className="pt-1">
-                                                            <p className="fw-bold mb-0">Комната для гениев</p>
-                                                            <p className="small text-muted">Move to this chat</p>
-                                                        </div>
-                                                    </div>
-                                                    <div className="pt-1">
-                                                        <p className="small text-muted mb-1">Just now</p>
-                                                    </div>
-                                                </NavLink></li>
-                                            </div>
-                                            <div className="modal-footer">
 
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
 
                             </div>
                         </div>

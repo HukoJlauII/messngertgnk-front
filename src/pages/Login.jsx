@@ -14,19 +14,18 @@ export const Login = observer(() => {
     const [password, setPassword] = useState();
     const navigate = useNavigate();
 
-    const logout = () => {
-        localStorage.removeItem('token')
-        localStorage.clear()
-        user.setUser({})
-        user.setIsAuth(false)
-        console.log(user)
-    }
+    // const logout = () => {
+    //     localStorage.removeItem('token')
+    //     localStorage.clear()
+    //     user.setUser({})
+    //     user.setIsAuth(false)
+    //     console.log(user)
+    // }
     const signIn = async () => {
         let response
         try {
             response = await login(username, password)
-            console.log(response)
-            user.setUser(response)
+            user.setUser(response.user)
             user.setIsAuth(true)
             navigate('/home')
         } catch (e) {
@@ -67,7 +66,7 @@ export const Login = observer(() => {
                                                            setter={e => setPassword(e.target.value)}/>
                                                 <RememberMe/>
                                                 <FormButton action={"Login"} submit={signIn}/>
-                                                <FormButton action={"Logout"} submit={logout}/>
+                                                {/*<FormButton action={"Logout"} submit={logout}/>*/}
                                                 <div className="col-12">
                                                     <p className="small mb-0">Don't have account? <NavLink
                                                         to="/register">Create
