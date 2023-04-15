@@ -31,9 +31,9 @@ export const Header = () => {
 
                         <NavLink className="nav-link nav-profile d-flex align-items-center pe-0" to="#"
                                  data-bs-toggle="dropdown">
-                            <img src='https://bootdey.com/img/Content/avatar/avatar6.png' alt="Profile"
+                            <img src={user.avatarPicture} alt="Profile"
                                  className="rounded-circle"/>
-                            <span className="d-none d-md-block dropdown-toggle ps-2">{user._user.username}</span>
+                            <span className="d-none d-md-block dropdown-toggle ps-2">{user.user.username}</span>
                         </NavLink>
 
                         <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">

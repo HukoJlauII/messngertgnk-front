@@ -20,16 +20,17 @@ export function Register() {
     const [passwordError, setPasswordError] = useState();
     const [passwordConfirmError, setPasswordConfirmError] = useState();
     const navigate = useNavigate()
-    console.log(localStorage.getItem('token'))
+    const [loading, setLoading] = useState(false);
     const signUp = async () => {
-        const response = await registration(name, surname, username, email, password, passwordConfirm)
+        setLoading(true)
+        await registration(name, surname, username, email, password, passwordConfirm)
             .then((res) => {
                     navigate('/login')
                     console.log(res)
-
                 }
             )
             .catch((err) => {
+                    setLoading(false)
                     err.response.data.forEach(fieldError => {
                         switch (fieldError.field) {
                             case 'name': {
@@ -103,7 +104,7 @@ export function Register() {
                                             <FormInput name={"Password Confirm"} value={passwordConfirm}
                                                        error={passwordConfirmError}
                                                        setter={e => setPasswordConfirm(e.target.value)}/>
-                                            <FormButton action={"Create Account"} submit={signUp}/>
+                                            <FormButton action={"Create Account"} submit={signUp} loading={loading}/>
                                             <div className="col-12">
                                                 <p className="small mb-0">Already have an account? <NavLink to="/login">Log
                                                     in</NavLink></p>

@@ -44,7 +44,7 @@ export const ChatPage = observer(() => {
                                                     <div className="card-body">
 
                                                         <div className="row">
-                                                            <div className="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0"
+                                                            <div className="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0 border-end"
                                                                  style={{overflowY: 'auto'}}>
 
                                                                 <div className="p-3">
@@ -150,7 +150,7 @@ export const ChatPage = observer(() => {
                                                                      className="text-muted justify-content-start align-items-center pe-3 pt-3 mt-2"
                                                                      style={{display: 'none'}}>
                                                                     <img
-                                                                        src='https://bootdey.com/img/Content/avatar/avatar6.png'
+                                                                        src={user.avatarPicture}
                                                                         alt="avatar 3"
                                                                         style={{width: '40px', height: '100%'}}/>
                                                                     <input type="text"
@@ -169,7 +169,7 @@ export const ChatPage = observer(() => {
                                                                      className="text-muted justify-content-start align-items-center pe-3 pt-3 mt-2"
                                                                      style={{display: 'none'}}>
                                                                     <img
-                                                                        src='https://bootdey.com/img/Content/avatar/avatar6.png'
+                                                                        src={user.avatarPicture}
                                                                         alt="avatar 3"
                                                                         style={{width: '40px', height: '100%'}}/>
                                                                     <input type="text"
@@ -184,76 +184,11 @@ export const ChatPage = observer(() => {
                                                                 </div>
                                                                 <div id="noChat" className="col-xxl-0 col-xl-12 h-50">
 
-                                                                    <div className="">
+                                                                    <div>
 
 
                                                                         <div className="card-body border-bottom">
-                                                                            {/*<h5 className="card-title text center">Создать*/}
-                                                                            {/*    новую*/}
-                                                                            {/*    комнату</h5>*/}
 
-                                                                            {/*<div*/}
-                                                                            {/*    className="d-flex align-items-center justify-content-around">*/}
-                                                                            {/*    <div*/}
-                                                                            {/*        className="card-icon rounded-circle d-flex align-items-center justify-content-center"*/}
-                                                                            {/*        data-bs-target="#verticalycentered"*/}
-                                                                            {/*        data-bs-toggle="modal">*/}
-                                                                            {/*        <i className="bi bi-plus"></i>*/}
-                                                                            {/*    </div>*/}
-                                                                            {/*    <div className="modal fade"*/}
-                                                                            {/*         id="verticalycentered"*/}
-                                                                            {/*         tabIndex="-1">*/}
-                                                                            {/*        <div*/}
-                                                                            {/*            className="modal-dialog modal-dialog-centered modal-lg">*/}
-                                                                            {/*            <div className="modal-content">*/}
-                                                                            {/*                <div*/}
-                                                                            {/*                    className="modal-header">*/}
-                                                                            {/*                    <h5 className="modal-title">Создание*/}
-                                                                            {/*                        комнаты</h5>*/}
-                                                                            {/*                    <button type="button"*/}
-                                                                            {/*                            className="btn-close"*/}
-                                                                            {/*                            data-bs-dismiss="modal"*/}
-                                                                            {/*                            aria-label="Close"></button>*/}
-                                                                            {/*                </div>*/}
-                                                                            {/*                <div className="modal-body">*/}
-                                                                            {/*                    <form>*/}
-                                                                            {/*                        <div*/}
-                                                                            {/*                            className="row mb-3">*/}
-                                                                            {/*                            <label*/}
-                                                                            {/*                                className="col-sm-2 col-form-label">Название*/}
-                                                                            {/*                                комнаты</label>*/}
-                                                                            {/*                            <div*/}
-                                                                            {/*                                className="col-sm-10">*/}
-                                                                            {/*                                <input*/}
-                                                                            {/*                                    type="text"*/}
-                                                                            {/*                                    className="form-control"*/}
-                                                                            {/*                                    placeholder="Введите название комнаты..."/>*/}
-                                                                            {/*                            </div>*/}
-                                                                            {/*                        </div>*/}
-
-
-                                                                            {/*                    </form>*/}
-                                                                            {/*                    <div*/}
-                                                                            {/*                        className="modal-footer">*/}
-                                                                            {/*                        <button*/}
-                                                                            {/*                            type="button"*/}
-                                                                            {/*                            className="btn btn-secondary"*/}
-                                                                            {/*                            data-bs-dismiss="modal">*/}
-                                                                            {/*                            Отмена*/}
-                                                                            {/*                        </button>*/}
-                                                                            {/*                        <button*/}
-                                                                            {/*                            type="button"*/}
-                                                                            {/*                            className="btn btn-primary"*/}
-                                                                            {/*                        >*/}
-                                                                            {/*                            Создать комнату*/}
-                                                                            {/*                        </button>*/}
-                                                                            {/*                    </div>*/}
-                                                                            {/*                </div>*/}
-                                                                            {/*            </div>*/}
-                                                                            {/*        </div>*/}
-                                                                            {/*    </div>*/}
-
-                                                                            {/*</div>*/}
                                                                             <div
                                                                                 className=" row card-body align-items-center justify-content-around"
                                                                                 style={{height: '600px'}}>

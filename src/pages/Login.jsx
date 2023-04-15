@@ -13,23 +13,21 @@ export const Login = observer(() => {
     const [username, setUsername] = useState();
     const [password, setPassword] = useState();
     const navigate = useNavigate();
+    const [passwordError, setPasswordError] = useState();
+    const [loading, setLoading] = useState(false);
 
-    // const logout = () => {
-    //     localStorage.removeItem('token')
-    //     localStorage.clear()
-    //     user.setUser({})
-    //     user.setIsAuth(false)
-    //     console.log(user)
-    // }
     const signIn = async () => {
         let response
         try {
+            setLoading(true)
             response = await login(username, password)
             user.setUser(response.user)
+            setLoading(false)
             user.setIsAuth(true)
             navigate('/home')
         } catch (e) {
-
+            setLoading(false)
+            setPasswordError('Неверное имя пользователя или пароль')
         }
 
     }
@@ -63,10 +61,10 @@ export const Login = observer(() => {
                                                 <FormInput name={"Username"} value={username}
                                                            setter={e => setUsername(e.target.value)}/>
                                                 <FormInput name={"Password"} value={password}
-                                                           setter={e => setPassword(e.target.value)}/>
+                                                           setter={e => setPassword(e.target.value)}
+                                                           error={passwordError}/>
                                                 <RememberMe/>
-                                                <FormButton action={"Login"} submit={signIn}/>
-                                                {/*<FormButton action={"Logout"} submit={logout}/>*/}
+                                                <FormButton action={"Login"} submit={signIn} loading={loading}/>
                                                 <div className="col-12">
                                                     <p className="small mb-0">Don't have account? <NavLink
                                                         to="/register">Create

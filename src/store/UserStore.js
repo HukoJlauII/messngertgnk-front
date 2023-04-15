@@ -1,4 +1,5 @@
 import {makeAutoObservable} from "mobx";
+import {getAvatar} from "../http/userAPI";
 
 export default class UserStore {
 
@@ -24,4 +25,19 @@ export default class UserStore {
     get user() {
         return this._user;
     }
+
+    get isAdmin() {
+        if (this.isAuth) {
+            return this._user.roles.includes('ROLE_ADMIN')
+        } else return false
+    }
+
+    get avatarPicture() {
+        if (this._user.avatar) {
+            return "http://localhost:8080/api/media/" + this._user.avatar.id
+        } else {
+            return "https://bootdey.com/img/Content/avatar/avatar6.png"
+        }
+    }
+
 }

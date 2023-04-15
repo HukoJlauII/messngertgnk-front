@@ -15,6 +15,7 @@ import {observer} from "mobx-react-lite";
 import UserProfile from "./pages/UserProfile";
 import ReactLoading from "react-loading"
 import {ErrorPage} from "./pages/ErrorPage";
+import {AdminPage} from "./pages/AdminPage";
 
 
 const App = observer(() => {
@@ -24,9 +25,8 @@ const App = observer(() => {
     useEffect(() => {
         setTimeout(() => {
             info().then(data => {
-                console.log(data)
                 user.setUser(data.data);
-                console.log(JSON.stringify(user.user))
+                console.log(user.isAdmin)
                 user.setIsAuth(true);
             }).finally(() => setLoading(false))
         },);
@@ -37,6 +37,9 @@ const App = observer(() => {
             className={"col-md-8 mx-auto h-100"} type={"spinningBubbles"} color={"skyblue"} height={'20vh'}
             width={'20vh'}></ReactLoading></div>)
     } else {
+        console.log(user.user)
+        console.log(localStorage.getItem('token'))
+        console.log('isAdmin - ' + user.isAdmin)
         return (
             <div className="App">
                 <BrowserRouter>
@@ -45,6 +48,7 @@ const App = observer(() => {
                         {user.isAuth && <Route path={"*"} Component={ErrorPage}/>}
                         {user.isAuth && <Route path="/home" Component={ChatPage}/>}
                         {user.isAuth && <Route path="/profile" Component={UserProfile}/>}
+                        {user.isAdmin && <Route path="/admin" Component={AdminPage }/>}
                         <Route path={"/login"} Component={Login}/>
                         <Route path={"/register"} Component={Register}/>
                     </Routes>
