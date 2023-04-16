@@ -3,9 +3,8 @@ import {SideBar} from "../components/SideBar";
 import {NavLink} from "react-router-dom";
 import {Footer} from "../components/Footer";
 import React, {useEffect, useState} from "react";
-import {allUsers} from "../http/userAPI";
+import {allUsers, deleteUser} from "../http/userAPI";
 import ReactLoading from "react-loading";
-import {makeAutoObservable} from "mobx";
 
 export const AdminPage = (props) => {
 
@@ -16,22 +15,26 @@ export const AdminPage = (props) => {
         setTimeout(() => {
             allUsers().then(data => {
                 setUsers(data.data._embedded.users)
-                console.log(users)
-            }).finally(()=>setLoading(false))
+            }).finally(() => setLoading(false))
         },);
     }, [])
+
+    const removeUser = async (event, id) => {
+        const table=event.target.parentNode.parentNode.parentNode
+        const tr=event.target.parentNode.parentNode
+        await deleteUser(id).then(()=>table.removeChild(tr))
+    }
 
     if (loading) {
         return (<div className={"d-flex min-vh-100 align-items-center justify-content-center"}><ReactLoading
             className={"col-md-8 mx-auto h-100"} type={"spinningBubbles"} color={"skyblue"} height={'20vh'}
             width={'20vh'}></ReactLoading></div>)
     } else {
-        console.log(users)
         return (
             <div>
                 <Header/>
 
-                <SideBar active={"Chat page"}/>
+                <SideBar admin={true}/>
 
                 <main id="main" className="main">
 
@@ -73,8 +76,11 @@ export const AdminPage = (props) => {
                                                         <td>{user.surname + ' ' + user.name}</td>
                                                         <td>{user.email}</td>
                                                         <td>{user.registrationDate}</td>
-                                                        <td><span className="badge bg-danger">Удалить уч. запись</span>
-                                                        </td>
+                                                        {user.roles.includes('ROLE_ADMIN') && <td></td>}
+                                                        {!user.roles.includes('ROLE_ADMIN') &&
+                                                            <td><span className="btn btn-danger"
+                                                                      onClick={(event) => removeUser(event, user.id)}>Удалить уч. запись</span>
+                                                            </td>}
                                                     </tr>)
                                             })}
                                             npm {/*<tr>*/}

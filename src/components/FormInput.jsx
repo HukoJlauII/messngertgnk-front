@@ -1,7 +1,7 @@
 export const FormInput = (props) => {
     return (
         <div className="col-12">
-            <label htmlFor={props.name.toLowerCase()} className="form-label">{props.name}</label>
+            <label htmlFor={props.name.toLowerCase()} className="form-label">{props.label}</label>
             <div className="input-group has-validation">
                 {(props.name === "Username") &&
                     <span className={"input-group-text"} id="inputGroupPrepend">@</span>}

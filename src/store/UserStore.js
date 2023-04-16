@@ -1,5 +1,4 @@
 import {makeAutoObservable} from "mobx";
-import {getAvatar} from "../http/userAPI";
 
 export default class UserStore {
 

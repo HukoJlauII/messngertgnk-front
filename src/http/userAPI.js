@@ -9,7 +9,19 @@ export const registration = async (name, surname, username, email, password, pas
 export const login = async (username, password) => {
     const {data} = await $host.post('api/auth/login', {username, password})
     localStorage.setItem('token', data.token)
+    console.log(getToken())
     return data
+}
+
+export const logout = async () => {
+    console.log(localStorage.getItem('token'))
+    return axios({
+        method: 'POST',
+        url: `http://localhost:8080/api/auth/logout`,
+        headers: {
+            'Authorization': 'Bearer ' + getToken()
+        }
+    })
 }
 
 export const getToken = () => {
@@ -24,13 +36,21 @@ export const info = async () => {
             'Authorization': 'Bearer ' + getToken()
         }
     })
-    // const response = (await $authHost.get('api/auth/info')).headers({'Authorization': 'Bearer ' + getToken()})
-    // return response
 }
 export const allUsers = async () => {
     return axios({
         method: 'GET',
         url: `http://localhost:8080/api/users`,
+        headers: {
+            'Authorization': 'Bearer ' + getToken()
+        }
+    })
+}
+
+export const deleteUser = async (id) => {
+    return axios({
+        method: 'DELETE',
+        url: `http://localhost:8080/api/users/`+id,
         headers: {
             'Authorization': 'Bearer ' + getToken()
         }
@@ -65,8 +85,8 @@ export const editPassword = async (oldPassword, newPassword, newPasswordConfirm)
 
 export const editProfile = async (formData) => {
 
-    return fetch("http://localhost:8080/api/media/upload", {
-        method: "POST",
+    return fetch("http://localhost:8080/api/profile/changeInfo", {
+        method: "PUT",
         body: formData,
         headers:{'Authorization': 'Bearer ' + getToken()}
     })

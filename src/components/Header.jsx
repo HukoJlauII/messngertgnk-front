@@ -3,20 +3,24 @@ import logo from "../assets/img/logo.png";
 import dayjs from "dayjs";
 import {useContext} from "react";
 import {Context} from "../index";
+import {logout} from "../http/userAPI";
 
 export const Header = () => {
     const {user} = useContext(Context)
-    const logout = () => {
-        localStorage.removeItem('token')
-        user.setUser({})
-        user.setIsAuth(false)
+    const logoutUser = async () => {
+        await logout().then(() => {
+            localStorage.removeItem('token')
+            user.setUser({})
+            user.setIsAuth(false)
+        })
+
     }
     return (
         <header id="header" className="header fixed-top d-flex align-items-center">
             <div className="d-flex align-items-center justify-content-between">
                 <NavLink to="/home" className="logo d-flex align-items-center">
                     <img src={logo} alt=""/>
-                    <span className="d-none d-lg-block">MyChat</span>
+                    <span className="d-none d-lg-block">TGNKMessage</span>
                 </NavLink>
                 <i className="bi bi-list toggle-sidebar-btn" onClick={() =>
                     document.querySelector('body').classList.toggle('toggle-sidebar')}></i>
@@ -39,7 +43,7 @@ export const Header = () => {
                         <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                             <li className="dropdown-header">
                                 <h6>{user.user.name + ' ' + user.user.surname}</h6>
-                                <span>Registered since {dayjs(user.user.registrationDate).format('DD MMM YYYY')}</span>
+                                <span>Зарегистрирован с {dayjs(user.user.registrationDate).format('DD MMM YYYY')}</span>
                             </li>
                             <li>
                                 <hr className="dropdown-divider"/>
@@ -48,7 +52,7 @@ export const Header = () => {
                             <li>
                                 <NavLink className="dropdown-item d-flex align-items-center" to="/profile">
                                     <i className="bi bi-person"></i>
-                                    <span>My Profile</span>
+                                    <span>Личный кабинет</span>
                                 </NavLink>
                             </li>
                             <li>
@@ -59,7 +63,7 @@ export const Header = () => {
                                 <NavLink className="dropdown-item d-flex align-items-center"
                                          to="/profile#edit-profile">
                                     <i className="bi bi-gear"></i>
-                                    <span>Account Settings</span>
+                                    <span>Изменить данные</span>
                                 </NavLink>
                             </li>
                             <li>
@@ -67,10 +71,10 @@ export const Header = () => {
                             </li>
 
                             <li>
-                                <NavLink className="dropdown-item d-flex align-items-center" onClick={logout}
+                                <NavLink className="dropdown-item d-flex align-items-center" onClick={logoutUser}
                                          to="/login">
                                     <i className="bi bi-box-arrow-right"></i>
-                                    <span>Sign Out</span>
+                                    <span>Выйти</span>
                                 </NavLink>
                             </li>
 

@@ -18,11 +18,11 @@ export const ChatPage = observer(() => {
             <main id="main" className="main">
 
                 <div className="pagetitle">
-                    <h1>Main page</h1>
+                    <h1>Мои сообщения</h1>
                     <nav>
                         <ol className="breadcrumb">
-                            <li className="breadcrumb-item"><NavLink to="/">Home</NavLink></li>
-                            <li className="breadcrumb-item active">Main page</li>
+                            <li className="breadcrumb-item"><NavLink to="/">Главная</NavLink></li>
+                            <li className="breadcrumb-item active">Мои сообщения</li>
                         </ol>
                     </nav>
                 </div>

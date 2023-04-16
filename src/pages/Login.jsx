@@ -53,22 +53,20 @@ export const Login = observer(() => {
                                     <div className="card mb-3">
                                         <div className="card-body">
                                             <div className="pt-4 pb-2">
-                                                <h5 className="card-title text-center pb-0 fs-4">Create an Account</h5>
-                                                <p className="text-center small">Enter your personal details to create
-                                                    account</p>
+                                                <h5 className="card-title text-center pb-0 fs-4">Войдите в свою учетную запись</h5>
+                                                <p className="text-center small">Введите своё имя пользователя и пароль для входа в систему</p>
                                             </div>
                                             <div className="row g-3 needs-validation">
-                                                <FormInput name={"Username"} value={username}
+                                                <FormInput name={"Username"} label={"Имя пользователя"}  value={username}
                                                            setter={e => setUsername(e.target.value)}/>
-                                                <FormInput name={"Password"} value={password}
+                                                <FormInput name={"Password"} label={"Пароль"}  value={password}
                                                            setter={e => setPassword(e.target.value)}
                                                            error={passwordError}/>
                                                 <RememberMe/>
-                                                <FormButton action={"Login"} submit={signIn} loading={loading}/>
+                                                <FormButton action={"Войти"} submit={signIn} loading={loading}/>
                                                 <div className="col-12">
-                                                    <p className="small mb-0">Don't have account? <NavLink
-                                                        to="/register">Create
-                                                        an account</NavLink></p>
+                                                    <p className="small mb-0">У вас нет учетной записи?  <NavLink
+                                                        to="/register">Создайте аккаунт</NavLink></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -77,7 +75,7 @@ export const Login = observer(() => {
                             </div>
                         </div>
                         <div className="credits">
-                            Designed by <a href="https://github.com/HukoJlauII">HukoJlauII</a>
+                            Разработано <a href="https://github.com/HukoJlauII">HukoJlauII</a>
                         </div>
                     </section>
                 </div>

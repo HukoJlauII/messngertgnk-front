@@ -13,7 +13,6 @@
             return document.querySelector(el)
         }
     }
-    console.log(select('.toggle-sidebar-btn'))
 
     // window.addEventListener('load', () => {
     //         const sideBarToggleButton = document.querySelector('.toggle-sidebar-btn')

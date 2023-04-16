@@ -4,12 +4,20 @@ import {SideBar} from "../components/SideBar";
 import {Footer} from "../components/Footer";
 import {Context} from "../index";
 import dayjs from "dayjs";
-import {editPassword, editProfile, getToken} from "../http/userAPI";
+import {editPassword, editProfile} from "../http/userAPI";
 import {observer} from "mobx-react-lite";
+import {NavLink} from "react-router-dom";
 
 const UserProfile = observer(() => {
-
-
+        const {user} = useContext(Context)
+        const [username, setUsername] = useState(user.user.username);
+        const [name, setName] = useState(user.user.name);
+        const [surname, setSurname] = useState(user.user.surname);
+        const [email, setEmail] = useState(user.user.email);
+        const [usernameError, setUsernameError] = useState('');
+        const [nameError, setNameError] = useState('');
+        const [surnameError, setSurnameError] = useState('');
+        const [emailError, setEmailError] = useState('');
         const [oldPassword, setOldPassword] = useState('');
         const [newPassword, setNewPassword] = useState('');
         const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
@@ -17,10 +25,9 @@ const UserProfile = observer(() => {
         const [newPasswordError, setNewPasswordError] = useState('');
         const [newPasswordConfirmError, setNewPasswordConfirmError] = useState('');
         const [avatar, setAvatar] = useState();
-        const [pic,setPic]=useState()
         const [formLoading, setFormLoading] = useState(false);
         const [changePasswordComplete, setChangePasswordComplete] = useState(false);
-        const {user} = useContext(Context)
+
         const changePassword = async () => {
             setFormLoading(true)
             setChangePasswordComplete(false)
@@ -31,11 +38,9 @@ const UserProfile = observer(() => {
                 setOldPasswordError('')
                 setNewPasswordError('')
                 setNewPasswordConfirmError('')
-                setFormLoading(false)
                 setChangePasswordComplete(true)
             })
                 .catch(err => {
-                    console.log(err)
                     err.response.data.forEach(fieldError => {
                         switch (fieldError.field) {
                             case 'password': {
@@ -59,16 +64,64 @@ const UserProfile = observer(() => {
 
         const changeProfile = async () => {
             let formData = new FormData();
-            console.log(avatar)
-            formData.append("file", avatar)
-            // formData.append("user", JSON.stringify({json:"user"}))
-            await editProfile(formData).then(res => user.setUser(res))
-            // await editProfile(formData)
+            let userInfo = {
+                username: username,
+                name: name,
+                surname: surname,
+                email: email
+            }
+            if (avatar) formData.append("file", avatar)
+            formData.append("user", JSON.stringify(userInfo))
+            setUsernameError('')
+            setNameError('')
+            setSurnameError('')
+            setEmailError('')
+            setFormLoading(true)
+            await editProfile(formData)
+                .then(response => {
+                    if (!response.ok) {
+                        response.json().then(
+                            err => {
+                                err.forEach(fieldError => {
+                                    switch (fieldError.field) {
+                                        case 'username': {
+                                            setUsernameError(fieldError.defaultMessage)
+                                            break;
+                                        }
+                                        case 'name': {
+                                            setNameError(fieldError.defaultMessage)
+                                            break;
+                                        }
+                                        case 'surname': {
+                                            setSurnameError(fieldError.defaultMessage)
+                                            break;
+                                        }
+                                        case 'email': {
+                                            setEmailError(fieldError.defaultMessage)
+                                            break;
+                                        }
+                                    }
+                                })
+                            }
+                        )
+                    } else {
+                        setUsernameError('')
+                        setNameError('')
+                        setSurnameError('')
+                        setEmailError('')
+                        response.json().then(async (value) => {
+                            user.setUser(value)
+                            return value
+                        })
+
+                    }
+
+                })
+                .finally(() => setFormLoading(false))
 
 
         }
 
-        console.log(avatar)
         return (
             <div>
                 <Header/>
@@ -81,7 +134,7 @@ const UserProfile = observer(() => {
                         <h1>Профиль</h1>
                         <nav>
                             <ol className="breadcrumb">
-                                <li className="breadcrumb-item"><a href="/home">Главная</a></li>
+                                <li className="breadcrumb-item"><NavLink to="/home">Главная</NavLink></li>
                                 <li className="breadcrumb-item">Пользователи</li>
                                 <li className="breadcrumb-item active">Профиль</li>
                             </ol>
@@ -101,11 +154,13 @@ const UserProfile = observer(() => {
                                         <h2>{user.user.surname + ' ' + user.user.name}</h2>
                                         <h3>{(user.isAdmin) ? "Администратор" : "Пользователь"}</h3>
                                         <div className="social-links mt-2">
-                                            <a href="#" className="twitter"><i className="bi bi-github"></i></a>
-                                            <a href="#" className="facebook"><i
-                                                className="bi bi-stack-overflow"></i></a>
-                                            <a href="#" className="instagram"><i className="bi bi-google"></i></a>
-                                            <a href="#" className="linkedin"><i className="bi bi-telegram"></i></a>
+                                            <NavLink to={'#'} className="twitter"><i className="bi bi-github"></i></NavLink>
+                                            <NavLink to={'#'} className="facebook"><i
+                                                className="bi bi-stack-overflow"></i></NavLink>
+                                            <NavLink to={'#'} className="instagram"><i
+                                                className="bi bi-google"></i></NavLink>
+                                            <NavLink to={'#'} className="linkedin"><i
+                                                className="bi bi-telegram"></i></NavLink>
                                         </div>
                                     </div>
                                 </div>
@@ -127,7 +182,7 @@ const UserProfile = observer(() => {
 
                                             <li className="nav-item">
                                                 <button className="nav-link" data-bs-toggle="tab"
-                                                        data-bs-target="#profile-edit">Редактировние профиля
+                                                        data-bs-target="#profile-edit">Редактирование профиля
                                                 </button>
                                             </li>
 
@@ -179,7 +234,7 @@ const UserProfile = observer(() => {
                                                                  alt="Profile"
                                                                  id="profileImage"/>
                                                             <div className="row">
-                                                                <div className="pt-2 col-6">
+                                                                <div className="pt-2 col-7 ">
                                                                     <input className="form-control"
                                                                            type="file"
                                                                            name="formFile1"
@@ -188,23 +243,19 @@ const UserProfile = observer(() => {
                                                                            multiple
                                                                            onChange={e => setAvatar(e.target.files[0])}/>
                                                                 </div>
-                                                                {/*<div className="pt-2 col">*/}
-                                                                {/*    <a href="#" className="btn btn-danger btn-sm"*/}
-                                                                {/*       title="Remove my profile image"><i*/}
-                                                                {/*        className="bi bi-trash"></i></a>*/}
-                                                                {/*    <a href="#" className="btn btn-danger btn-sm"*/}
-                                                                {/*       title="Remove my profile image"><i*/}
-                                                                {/*        className="bi bi-trash"></i></a>*/}
-                                                                {/*</div>*/}
                                                             </div>
                                                         </div>
                                                     </div>
                                                     <div className="row mb-3">
                                                         <label htmlFor="name"
-                                                               className="col-md-4 col-lg-3 col-form-label">Имя</label>
+                                                               className="col-md-4 col-lg-3 col-form-label">Имя
+                                                            пользователя</label>
                                                         <div className="col-md-8 col-lg-9">
-                                                            <input name="fullName" type="text" className="form-control"
-                                                                   id="name" value={user.user.username}/>
+                                                            <input name="fullName" type="text"
+                                                                   className={usernameError ? "form-control is-invalid" : "form-control"}
+                                                                   id="name" value={username}
+                                                                   onChange={e => setUsername(e.target.value)}/>
+                                                            <div className="invalid-feedback">{usernameError}</div>
                                                         </div>
                                                     </div>
 
@@ -212,16 +263,22 @@ const UserProfile = observer(() => {
                                                         <label htmlFor="name"
                                                                className="col-md-4 col-lg-3 col-form-label">Имя</label>
                                                         <div className="col-md-8 col-lg-9">
-                                                            <input name="fullName" type="text" className="form-control"
-                                                                   id="name" value={user.user.name}/>
+                                                            <input name="fullName" type="text"
+                                                                   className={nameError ? "form-control is-invalid" : "form-control"}
+                                                                   id="name" value={name}
+                                                                   onChange={e => setName(e.target.value)}/>
+                                                            <div className="invalid-feedback">{nameError}</div>
                                                         </div>
                                                     </div>
                                                     <div className="row mb-3">
                                                         <label htmlFor="surname"
                                                                className="col-md-4 col-lg-3 col-form-label">Фамилия</label>
                                                         <div className="col-md-8 col-lg-9">
-                                                            <input name="fullName" type="text" className="form-control"
-                                                                   id="surname" value={user.user.surname}/>
+                                                            <input name="fullName" type="text"
+                                                                   className={surnameError ? "form-control is-invalid" : "form-control"}
+                                                                   id="surname" value={surname}
+                                                                   onChange={e => setSurname(e.target.value)}/>
+                                                            <div className="invalid-feedback">{surnameError}</div>
                                                         </div>
                                                     </div>
 
@@ -229,18 +286,26 @@ const UserProfile = observer(() => {
                                                         <label htmlFor="Email"
                                                                className="col-md-4 col-lg-3 col-form-label">Почта</label>
                                                         <div className="col-md-8 col-lg-9">
-                                                            <input name="email" type="email" className="form-control"
-                                                                   id="Email" value={user.user.email}/>
+                                                            <input name="email" type="email"
+                                                                   className={emailError ? "form-control is-invalid" : "form-control"}
+                                                                   id="Email" value={email}
+                                                                   onChange={e => setEmail(e.target.value)}/>
+                                                            <div className="invalid-feedback">{emailError}</div>
                                                         </div>
                                                     </div>
                                                     <div className="text-center">
-                                                        <button type="submit" className="btn btn-primary"
-                                                                onClick={changeProfile}>Сохранить
-                                                            изменения
-                                                        </button>
+                                                        {!formLoading &&
+                                                            <button onClick={changeProfile}
+                                                                    className="btn btn-primary">Сохранить изменения
+                                                            </button>}
+                                                        {(formLoading &&
+                                                            <button className="btn btn-primary" type="button" disabled>
+                                                            <span className="spinner-border spinner-border-sm"
+                                                                  role="status" aria-hidden="true"></span>
+                                                                Загрузка...
+                                                            </button>)}
                                                     </div>
                                                 </div>
-
 
                                             </div>
 
@@ -307,7 +372,7 @@ const UserProfile = observer(() => {
                                                             <button className="btn btn-primary" type="button" disabled>
                                                             <span className="spinner-border spinner-border-sm"
                                                                   role="status" aria-hidden="true"></span>
-                                                                Loading...
+                                                                Загрузка...
                                                             </button>)}
                                                     </div>
                                                 </div>

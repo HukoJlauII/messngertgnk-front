@@ -1,33 +1,39 @@
-import {NavLink} from "react-router-dom";
+import {NavLink, useLocation} from "react-router-dom";
+import {useContext} from "react";
+import {Context} from "../index";
 
 export const SideBar = (props) => {
-    showActiveLink()
+    const location = useLocation()
+    const user = useContext(Context)
     return (
         <aside id="sidebar" className="sidebar">
 
             <ul className="sidebar-nav" id="sidebar-nav">
-                <li className="nav-heading">Pages</li>
+                <li className="nav-heading">Страницы</li>
                 <li className="nav-item">
-                    <NavLink className={props.active === "Chat page" ? 'nav-link' : 'nav-link collapsed'} to="/">
+                    <NavLink className={location.pathname === '/home' ? 'nav-link' : 'nav-link collapsed'} to="/home">
                         <i className="bi bi-chat"></i>
-                        <span>Chat page</span>
+                        <span>Сообщения</span>
                     </NavLink>
                 </li>
 
 
                 <li className="nav-item">
-                    <NavLink className={props.active === 'Profile' ? 'nav-link' : 'nav-link collapsed'} to="/profile">
+                    <NavLink className={location.pathname === '/profile' ? 'nav-link' : 'nav-link collapsed'}
+                             to="/profile">
                         <i className="bi bi-person"></i>
-                        <span>Profile</span>
+                        <span>Личный кабинет</span>
                     </NavLink>
                 </li>
-
+                {user.isAdmin &&
+                    <li className="nav-item">
+                        <NavLink className={location.pathname === '/admin'  ? 'nav-link' : 'nav-link collapsed'}
+                                 to="/profile">
+                            <i className="bi bi-menu-button-wide"></i>
+                            <span>Админ панель</span>
+                        </NavLink>
+                    </li>}
             </ul>
-
         </aside>
     );
 };
-
-function showActiveLink() {
-
-}
