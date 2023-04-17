@@ -86,28 +86,26 @@ export function Register() {
                                 <div className="card mb-3">
                                     <div className="card-body">
                                         <div className="pt-4 pb-2">
-                                            <h5 className="card-title text-center pb-0 fs-4">Create an Account</h5>
-                                            <p className="text-center small">Enter your personal details to create
-                                                account</p>
+                                            <h5 className="card-title text-center pb-0 fs-4">Создайте аккаунт</h5>
+                                            <p className="text-center small">Введите свои личные данные для создания учетной записи</p>
                                         </div>
                                         <div className="row g-3 needs-validation">
-                                            <FormInput name={"Name"} value={name} error={nameError}
+                                            <FormInput name={"Name"} label={"Имя"} value={name} error={nameError}
                                                        setter={e => setName(e.target.value)}/>
-                                            <FormInput name={"Surname"} value={surname} error={surnameError}
+                                            <FormInput name={"Surname"} label={"Фамилия"} value={surname} error={surnameError}
                                                        setter={e => setSurname(e.target.value)}/>
-                                            <FormInput name={"Email"} value={email} error={emailError}
+                                            <FormInput name={"Email"} label={"Почта"} value={email} error={emailError}
                                                        setter={e => setEmail(e.target.value)}/>
-                                            <FormInput name={"Username"} value={username} error={usernameError}
+                                            <FormInput name={"Username"} label={"Имя пользователя"} value={username} error={usernameError}
                                                        setter={e => setUsername(e.target.value)}/>
-                                            <FormInput name={"Password"} value={password} error={passwordError}
+                                            <FormInput name={"Password"} label={"Пароль"} value={password} error={passwordError}
                                                        setter={e => setPassword(e.target.value)}/>
-                                            <FormInput name={"Password Confirm"} value={passwordConfirm}
+                                            <FormInput name={"Password Confirm"} label={"Подтверждение пароля"} value={passwordConfirm}
                                                        error={passwordConfirmError}
                                                        setter={e => setPasswordConfirm(e.target.value)}/>
-                                            <FormButton action={"Create Account"} submit={signUp} loading={loading}/>
+                                            <FormButton action={"Создать аккаунт"} submit={signUp} loading={loading}/>
                                             <div className="col-12">
-                                                <p className="small mb-0">Already have an account? <NavLink to="/login">Log
-                                                    in</NavLink></p>
+                                                <p className="small mb-0">Уже есть аккаунт? <NavLink to="/login">Войдите</NavLink></p>
                                             </div>
                                         </div>
                                     </div>
@@ -116,7 +114,7 @@ export function Register() {
                         </div>
                     </div>
                     <div className="credits">
-                        Designed by <a href="https://github.com/HukoJlauII">HukoJlauII</a>
+                        Разработано <a href="https://github.com/HukoJlauII">HukoJlauII</a>
                     </div>
                 </section>
             </div>

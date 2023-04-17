@@ -2,9 +2,9 @@ import {NavLink, useLocation} from "react-router-dom";
 import {useContext} from "react";
 import {Context} from "../index";
 
-export const SideBar = (props) => {
+export const SideBar = () => {
     const location = useLocation()
-    const user = useContext(Context)
+    const {user} = useContext(Context)
     return (
         <aside id="sidebar" className="sidebar">
 
@@ -28,7 +28,7 @@ export const SideBar = (props) => {
                 {user.isAdmin &&
                     <li className="nav-item">
                         <NavLink className={location.pathname === '/admin'  ? 'nav-link' : 'nav-link collapsed'}
-                                 to="/profile">
+                                 to="/admin">
                             <i className="bi bi-menu-button-wide"></i>
                             <span>Админ панель</span>
                         </NavLink>

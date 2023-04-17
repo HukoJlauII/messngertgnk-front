@@ -2,10 +2,10 @@ export function Footer() {
     return (
         <footer id="footer" className="footer">
             <div className="copyright">
-                &copy; Copyright <strong><span>TGNKMessage</span></strong>. All Rights Reserved
+                &copy; Copyright <strong><span>TGNKMessage</span></strong>. Все права защищены (почти)
             </div>
             <div className="credits">
-                Designed by <a href="https://github.com/HukoJlauII">HukoJlauII</a>
+                Разработано <a href="https://github.com/HukoJlauII">HukoJlauII</a>
             </div>
         </footer>
     );
