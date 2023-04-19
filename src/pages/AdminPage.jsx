@@ -5,6 +5,7 @@ import {Footer} from "../components/Footer";
 import React, {useEffect, useState} from "react";
 import {allUsers, deleteUser} from "../http/userAPI";
 import ReactLoading from "react-loading";
+import {avatarPicture} from "../App";
 
 export const AdminPage = () => {
 
@@ -15,14 +16,15 @@ export const AdminPage = () => {
         setTimeout(() => {
             allUsers().then(data => {
                 setUsers(data.data._embedded.users)
+                console.log(data.data._embedded.users)
             }).finally(() => setLoading(false))
         },);
     }, [])
 
     const removeUser = async (event, id) => {
-        const table=event.target.parentNode.parentNode.parentNode
-        const tr=event.target.parentNode.parentNode
-        await deleteUser(id).then(()=>table.removeChild(tr))
+        const table = event.target.parentNode.parentNode.parentNode
+        const tr = event.target.parentNode.parentNode
+        await deleteUser(id).then(() => table.removeChild(tr))
     }
 
     if (loading) {
@@ -61,6 +63,7 @@ export const AdminPage = () => {
                                         <table className="table table-dark text-center">
                                             <thead>
                                             <tr>
+                                                <th scope="col">Аватар</th>
                                                 <th scope="col">Никнейм</th>
                                                 <th scope="col">Полное имя</th>
                                                 <th scope="col">Почта</th>
@@ -72,7 +75,11 @@ export const AdminPage = () => {
                                             {users.map(user => {
                                                 return (
                                                     <tr>
-                                                        <th scope="row">{user.username}</th>
+                                                        <td scope="col"><img src={avatarPicture(user)}
+                                                                             style={{height: '50px', width: '50px'}}
+                                                                             alt="Profile"
+                                                                             className="rounded-circle"/></td>
+                                                        <td scope="row">{user.username}</td>
                                                         <td>{user.surname + ' ' + user.name}</td>
                                                         <td>{user.email}</td>
                                                         <td>{user.registrationDate}</td>

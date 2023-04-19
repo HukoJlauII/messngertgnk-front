@@ -8,10 +8,13 @@ import {logout} from "../http/userAPI";
 export const Header = () => {
     const {user} = useContext(Context)
     const logoutUser = async () => {
+        // localStorage.removeItem('token')
+        user.setUser({})
+        user.setIsAuth(false)
         await logout().then(() => {
             localStorage.removeItem('token')
-            user.setUser({})
-            user.setIsAuth(false)
+            // user.setUser({})
+            // user.setIsAuth(false)
         })
 
     }

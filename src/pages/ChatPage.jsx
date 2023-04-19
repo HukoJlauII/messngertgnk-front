@@ -1,14 +1,119 @@
 import {Footer} from "../components/Footer";
 import {NavLink} from "react-router-dom";
-import {useContext} from "react";
+import React, {useContext, useState} from "react";
 import {Context} from "../index";
-import {observer} from "mobx-react-lite";
 import {Header} from "../components/Header";
 import {SideBar} from "../components/SideBar";
+import {over} from 'stompjs';
+import SockJS from 'sockjs-client';
+import {findUsers} from "../http/userAPI";
+import {avatarPicture} from "../App";
+import dayjs from "dayjs";
+import {allMessagesInChat} from "../http/messagesAPI";
+// import InputEmoji from 'react-input-emoji'
+var stompClient = null;
 
-export const ChatPage = observer(() => {
+export const ChatPage = () => {
     const {user} = useContext(Context)
 
+    const [searchLine, setSearchLine] = useState('');
+    const [receiver, setReceiver] = useState()
+    const [chatUsers, setChatUsers] = useState();
+    const [searchUsersList, setSearchUsersList] = useState();
+    const [messageText, setMessageText] = useState('');
+    const [messages, setMessages] = useState()
+
+    // useEffect(() => {
+    //
+    // }, []);
+    //
+    const searchUsers = async () => {
+        await findUsers(searchLine, 0).then(res => {
+            setSearchUsersList(res.data._embedded.users)
+        })
+
+    }
+    const goToDialog = () => {
+        connect()
+
+    }
+    const connect = () => {
+        let Sock = new SockJS('http://localhost:8080/chat');
+        stompClient = over(Sock);
+        stompClient.connect({}, function () {
+            setTimeout(onConnected, 200)
+        }, onError);
+    }
+    const onConnected = async () => {
+        console.log(receiver)
+        if (user.user.id < receiver.id) {
+            stompClient.subscribe('/topic/' + user.user.name + '/' + receiver.username, onMessageReceived)
+        } else {
+            stompClient.subscribe('/topic/' + receiver.username + '/' + user.user.name, onMessageReceived)
+        }
+        await allMessagesInChat(user, receiver).then(res => {
+            setMessages(res.data._embedded.messages)
+        })
+
+    }
+    const onError = (error) => {
+        console.log(error)
+    }
+    const onMessageReceived = (payload) => {
+        const message = JSON.parse(payload.body)
+        console.log(message)
+        // chatArea.appendChild(createMessage(message))
+        // chatArea.scrollTop = chatArea.scrollHeight
+    }
+    const sendMessage = () => {
+
+        if (messageText === '') {
+            return
+        }
+        const chatMessage = {
+            content: messageText,
+            sender: user.user,
+            receiver: receiver,
+            sendTime: new Date()
+        }
+        if (messageText && stompClient)
+            if (user.user.id < receiver.id) {
+                stompClient.send('/chat.send/' + user.user.name + '/' + receiver.username, {}, JSON.stringify(chatMessage))
+            } else {
+                stompClient.send('/chat.send/' + receiver.username + '/' + user.user.name, {}, JSON.stringify(chatMessage))
+            }
+
+        setMessageText('')
+
+    }
+
+
+    const checkOnline = (user) => {
+        if (user.lastOnline) {
+            const lastOnline = dayjs(user.lastOnline)
+            switch (lastOnline.diff(new Date(), 'day', false)) {
+                case 0: {
+                    return lastOnline.format('HH:mm')
+                }
+                case 6:
+                case 5:
+                case 4:
+                case 3:
+                case 2: {
+                    return lastOnline.format('dd')
+                }
+                case 1: {
+                    return lastOnline.format('Вчера')
+                }
+                default: {
+                    return lastOnline.format('D MMM')
+                }
+            }
+
+        } else {
+            return 'Онлайн'
+        }
+    }
     return (
         <div>
             <Header/>
@@ -44,8 +149,9 @@ export const ChatPage = observer(() => {
                                                     <div className="card-body">
 
                                                         <div className="row">
-                                                            <div className="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0 border-end"
-                                                                 style={{overflowY: 'auto'}}>
+                                                            <div
+                                                                className="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0 border-end"
+                                                                style={{overflowY: 'auto'}}>
 
                                                                 <div className="p-3">
 
@@ -53,24 +159,105 @@ export const ChatPage = observer(() => {
                                                                          className="input-group rounded mb-3">
                                                                         <input type="search"
                                                                                className="form-control rounded"
-                                                                               placeholder="Поиск" aria-label="Search"
-                                                                               aria-describedby="search-addon"/>
+                                                                               placeholder="Введите ник"
+                                                                               aria-label="Search"
+                                                                               aria-describedby="search-addon"
+                                                                               onChange={e => setSearchLine(e.target.value)}/>
                                                                         <span className="input-group-text border-0"
-                                                                              id="search-addon">
-                      <i className="fas fa-search"></i>
-                    </span>
+                                                                              onClick={searchUsers}
+                                                                              id="search-addon"><i
+                                                                            className="fas fa-search"></i></span>
                                                                     </div>
+                                                                    <ul className="list-unstyled border-right mb-0">
+                                                                        {!chatUsers && !searchUsersList && <div
+                                                                            className=" row card-body align-items-center justify-content-around"
+                                                                            style={{height: '600px'}}>
+                                                                        <span
+                                                                            className="text-center">Для начала общения найдите пользователя по нику</span>
+                                                                        </div>
+                                                                        }
+                                                                        {searchUsersList &&
+                                                                            searchUsersList.map(user => {
+                                                                                    return (
+                                                                                        <li className="p-2 border-bottom border-top"
+                                                                                            key={user.id}>
+                                                                                            <NavLink
+                                                                                                onClick={() => {
+                                                                                                    setReceiver(user)
+                                                                                                    setTimeout(goToDialog, 200)
+                                                                                                }}
+                                                                                                to="#"
+                                                                                                className="d-flex justify-content-between align-items-center">
+                                                                                                <div
+                                                                                                    className="d-flex flex-row">
+                                                                                                    <div>
+                                                                                                        <img
+                                                                                                            src={avatarPicture(user)}
+                                                                                                            style={{
+                                                                                                                height: '60px',
+                                                                                                                width: '60px'
+                                                                                                            }} alt="Profile"
+                                                                                                            className="rounded-circle d-flex align-self-center me-3"/>
+                                                                                                        <span
+                                                                                                            className="badge bg-success badge-dot"></span>
+                                                                                                    </div>
+                                                                                                    <div className="pt-1">
+                                                                                                        <p className="fw-bold mb-0">{user.username}</p>
+                                                                                                        <p className="small text-muted">Перейти
+                                                                                                            в диалог</p>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div className="pt-1">
+                                                                                                    <p className="small text-muted mb-1">{checkOnline(user)}</p>
+                                                                                                </div>
+                                                                                            </NavLink></li>
+                                                                                    )
+                                                                                }
+                                                                            )
+                                                                        }
+                                                                        {chatUsers &&
+                                                                            chatUsers.map(user => {
+                                                                                    return (
+                                                                                        <li className="p-2 border-bottom">
+                                                                                            <NavLink
+                                                                                                to="#"
+                                                                                                className="d-flex justify-content-between">
+                                                                                                <div
+                                                                                                    className="d-flex flex-row">
+                                                                                                    <div>
+                                                                                                        <img
+                                                                                                            src={avatarPicture(user)}
+                                                                                                            alt="avatar"
+                                                                                                            className="rounded-circle d-flex align-self-center me-3"
+                                                                                                            width="60"/>
+                                                                                                        <span
+                                                                                                            className="badge bg-success badge-dot"></span>
+                                                                                                    </div>
+                                                                                                    <div className="pt-1">
+                                                                                                        <p className="fw-bold mb-0">{user.username}</p>
+                                                                                                        <p className="small text-muted">{user.lastMessage}</p>
+                                                                                                    </div>
+                                                                                                </div>
+                                                                                                <div className="pt-1">
+                                                                                                    <p className="small text-muted mb-1">{user.lastOnline}</p>
+                                                                                                </div>
+                                                                                            </NavLink></li>
+                                                                                    )
+                                                                                }
+                                                                            )
+                                                                        }
+                                                                    </ul>
 
-                                                                    <div data-mdb-perfect-scrollbar="true"
-                                                                         style={{
-                                                                             position: 'relative',
-                                                                             height: 'auto',
-                                                                             overflowY: 'auto'
-                                                                         }}>
-                                                                        <ul className="list-unstyled border-right mb-0">
+                                                                    {/*<div data-mdb-perfect-scrollbar="true"*/}
+                                                                    {/*     style={{*/}
+                                                                    {/*         position: 'relative',*/}
+                                                                    {/*         height: 'auto',*/}
+                                                                    {/*         overflowY: 'auto'*/}
+                                                                    {/*     }}>*/}
+                                                                    {/*    <ul className="list-unstyled border-right mb-0">*/}
 
-                                                                        </ul>
-                                                                    </div>
+                                                                    {/*    </ul>*/}
+                                                                    {/*</div>*/}
 
                                                                 </div>
 
@@ -106,65 +293,82 @@ export const ChatPage = observer(() => {
                                                                     </div>
 
                                                                 </div>
-                                                                <div id="topChat" className="col-xxl-0 col-xl-12"
-                                                                     style={{display: 'none'}}>
+                                                                {messages &&
+                                                                    <div id="topChat" className="col-xxl-0 col-xl-12">
 
-                                                                    <div className="border-bottom">
+                                                                        <div className="border-bottom mb-1">
 
-                                                                        <div
-                                                                            className="card-header d-flex align-items-center justify-content-between">
-                                                                            <button
-                                                                                className="btn btn-secondary rounded-pill">
-                                                                                <i
-                                                                                    className="bi bi-arrow-left-circle"></i>
-                                                                            </button>
-                                                                            <div className="row"><h5
-                                                                                className="card-title text-center"
-                                                                                data-bs-target="#largeModal"
-                                                                                data-bs-toggle="modal">Комната для
-                                                                                гениев</h5>
+                                                                            <div
+                                                                                className="card-header d-flex align-items-center justify-content-between">
+                                                                                <img
+                                                                                    src={avatarPicture(receiver)}
+                                                                                    style={{
+                                                                                        height: '50px',
+                                                                                        width: '50px'
+                                                                                    }} alt="Profile"
+                                                                                    className="rounded-circle"/>
+                                                                                <div className="row"><h5
+                                                                                    className="card-title text-center"
+                                                                                    data-bs-target="#largeModal"
+                                                                                    data-bs-toggle="modal">{receiver.username}</h5>
+                                                                                </div>
 
+                                                                                <button
+                                                                                    className="btn btn-white rounded-pill">
+                                                                                    <i
+                                                                                        className="bi bi-three-dots"></i>
+                                                                                </button>
                                                                             </div>
 
-                                                                            <button
-                                                                                className="btn btn-white rounded-pill">
-                                                                                <i
-                                                                                    className="bi bi-three-dots"></i>
-                                                                            </button>
+
                                                                         </div>
 
+                                                                    </div>}
+                                                                {messages && <div id="chatRoom" className="pt-3 pe-3"
+                                                                                  data-mdb-perfect-scrollbar="true"
+                                                                                  style={{
+                                                                                      position: 'relative',
+                                                                                      height: '500px',
+                                                                                      overflowY: 'auto'
+                                                                                  }}>
+                                                                </div>}
 
-                                                                    </div>
 
-                                                                </div>
-                                                                <div id="chatRoom" className="pt-3 pe-3"
-                                                                     data-mdb-perfect-scrollbar="true"
-                                                                     style={{
-                                                                         display: 'none',
-                                                                         position: 'relative',
-                                                                         height: '400px',
-                                                                         overflowY: 'scroll'
-                                                                     }}>
-                                                                </div>
-                                                                <div id="chatInputArea"
-                                                                     className="text-muted justify-content-start align-items-center pe-3 pt-3 mt-2"
-                                                                     style={{display: 'none'}}>
+                                                                {messages && <div id="chatInputArea"
+                                                                                  className="text-muted justify-content-start align-items-center pe-3 pt-3 mt-2 d-flex">
                                                                     <img
-                                                                        src={user.avatarPicture}
-                                                                        alt="avatar 3"
-                                                                        style={{width: '40px', height: '100%'}}/>
+                                                                        src={avatarPicture(user.user)}
+                                                                        style={{
+                                                                            height: '50px',
+                                                                            width: '50px'
+                                                                        }} alt="Profile"
+                                                                        className="rounded-circle"/>
                                                                     <input type="text"
                                                                            className="form-control form-control-lg"
                                                                            id="exampleFormControlInput2"
-                                                                           placeholder="Type message"/>
-                                                                    <NavLink className="ms-1 text-muted" to="#!"><i
-                                                                        className="fas fa-paperclip"></i></NavLink>
-                                                                    <NavLink className="ms-3 text-muted" to="#!"><i
-                                                                        className="fas fa-smile"></i></NavLink>
+                                                                           onChange={e => setMessageText(e.target.value)}
+                                                                        // cleanOnEnter
+                                                                        // onEnter={sendMessage}
+                                                                           placeholder="Введите сообщение"/>
+                                                                    {/*<InputEmoji*/}
+                                                                    {/*    value={messageText}*/}
+                                                                    {/*    type={'text'}*/}
+                                                                    {/*    className="form-control form-control-lg"*/}
+                                                                    {/*    onChange={e => setMessageText(e.target.value)}*/}
+                                                                    {/*    cleanOnEnter*/}
+                                                                    {/*    onEnter={sendMessage}*/}
+                                                                    {/*    placeholder="Введите сообщение"*/}
+                                                                    {/*/>*/}
+                                                                    <label htmlFor="file" style={{cursor: 'pointer'}}>
+                                                                        <i className="fa fa-paperclip"></i>
+                                                                    </label>
+                                                                    <input id="file" name="file" type="file"
+                                                                           multiple hidden/>
                                                                     <NavLink id="sendButton" className="ms-3"
-                                                                             to="#!"><i
+                                                                             onClick={sendMessage}
+                                                                    ><i
                                                                         className="fas fa-paper-plane"></i></NavLink>
-                                                                </div>
+                                                                </div>}
                                                                 <div id="editInputArea"
                                                                      className="text-muted justify-content-start align-items-center pe-3 pt-3 mt-2"
                                                                      style={{display: 'none'}}>
@@ -182,26 +386,28 @@ export const ChatPage = observer(() => {
                                                                              to="#!"><i
                                                                         className="fas fa-paper-plane"></i></NavLink>
                                                                 </div>
-                                                                <div id="noChat" className="col-xxl-0 col-xl-12 h-50">
+                                                                {!messages &&
+                                                                    <div id="noChat"
+                                                                         className="col-xxl-0 col-xl-12 h-50">
 
-                                                                    <div>
+                                                                        <div>
 
 
-                                                                        <div className="card-body border-bottom">
+                                                                            <div className="card-body ">
 
-                                                                            <div
-                                                                                className=" row card-body align-items-center justify-content-around"
-                                                                                style={{height: '600px'}}>
+                                                                                <div
+                                                                                    className=" row card-body align-items-center justify-content-around"
+                                                                                    style={{height: '600px'}}>
                                                                         <span
                                                                             className="text-center">Выберите диалог...</span>
+                                                                                </div>
+
                                                                             </div>
 
                                                                         </div>
 
-                                                                    </div>
 
-
-                                                                </div>
+                                                                    </div>}
                                                             </div>
 
                                                         </div>
@@ -225,4 +431,4 @@ export const ChatPage = observer(() => {
 
         </div>
     );
-})
+}

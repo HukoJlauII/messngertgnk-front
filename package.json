@@ -13,12 +13,16 @@
     "jwt-decode": "^3.1.2",
     "mobx": "^6.9.0",
     "mobx-react-lite": "^4.0.2",
+    "net": "^1.0.2",
     "react": "^18.2.0",
     "react-bootstrap": "^2.7.2",
     "react-dom": "^18.2.0",
+    "react-input-emoji": "^5.0.2",
     "react-loading": "^2.0.3",
     "react-router-dom": "^6.9.0",
     "react-scripts": "5.0.1",
+    "sockjs-client": "^1.6.1",
+    "stompjs": "^2.3.3",
     "web-vitals": "^2.1.4"
   },
   "scripts": {

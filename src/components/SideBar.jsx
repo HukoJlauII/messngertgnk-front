@@ -27,7 +27,7 @@ export const SideBar = () => {
                 </li>
                 {user.isAdmin &&
                     <li className="nav-item">
-                        <NavLink className={location.pathname === '/admin'  ? 'nav-link' : 'nav-link collapsed'}
+                        <NavLink className={location.pathname === '/admin' ? 'nav-link' : 'nav-link collapsed'}
                                  to="/admin">
                             <i className="bi bi-menu-button-wide"></i>
                             <span>Админ панель</span>

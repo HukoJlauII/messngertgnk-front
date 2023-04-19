@@ -5,7 +5,8 @@ export const FormInput = (props) => {
             <div className="input-group has-validation">
                 {(props.name === "Username") &&
                     <span className={"input-group-text"} id="inputGroupPrepend">@</span>}
-                <input type={chooseInputType(props.name)} name={props.name.toLowerCase()} className={props.error ? "form-control is-invalid" : " form-control"}
+                <input type={chooseInputType(props.name)} name={props.name.toLowerCase()}
+                       className={props.error ? "form-control is-invalid" : " form-control"}
                        id={props.name.toLowerCase()}
                        value={props.value}
                        onChange={props.setter}

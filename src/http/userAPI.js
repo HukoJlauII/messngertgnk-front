@@ -1,4 +1,4 @@
-import {$authHost, $host} from "./index";
+import {$host} from "./index";
 import axios from "axios";
 
 export const registration = async (name, surname, username, email, password, passwordConfirm) => {
@@ -14,7 +14,6 @@ export const login = async (username, password) => {
 }
 
 export const logout = async () => {
-    console.log(localStorage.getItem('token'))
     return axios({
         method: 'POST',
         url: `http://localhost:8080/api/auth/logout`,
@@ -47,23 +46,40 @@ export const allUsers = async () => {
     })
 }
 
-export const deleteUser = async (id) => {
+export const findUsers = async (username, page) => {
     return axios({
-        method: 'DELETE',
-        url: `http://localhost:8080/api/users/`+id,
+        method: 'GET',
+        url: `http://localhost:8080/api/users/search/usersInChat`,
+        params: {
+            'username': username,
+            'page': page,
+            'size': 5
+        },
         headers: {
             'Authorization': 'Bearer ' + getToken()
         }
     })
 }
 
-export const getAvatar = async (url) => {
+export const deleteUser = async (id) => {
     return axios({
-        method: 'GET',
-        url: url,
+        method: 'DELETE',
+        url: `http://localhost:8080/api/users/` + id,
         headers: {
             'Authorization': 'Bearer ' + getToken()
         }
+    })
+}
+
+export const getAvatar = (url) => {
+    return axios({
+        method: 'GET',
+        url: url,
+        responseType: "arraybuffer",
+        headers: {
+            'Authorization': 'Bearer ' + getToken()
+        }
+
     })
 }
 
@@ -88,7 +104,7 @@ export const editProfile = async (formData) => {
     return fetch("http://localhost:8080/api/profile/changeInfo", {
         method: "PUT",
         body: formData,
-        headers:{'Authorization': 'Bearer ' + getToken()}
+        headers: {'Authorization': 'Bearer ' + getToken()}
     })
 }
 

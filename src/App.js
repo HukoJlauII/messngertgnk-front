@@ -6,7 +6,7 @@ import './assets/css/style.css'
 import "./assets/js/main.js"
 import "./assets/css/chat.css"
 import "./assets/vendor/bootstrap-icons/bootstrap-icons.css"
-import {info} from "./http/userAPI";
+import {getToken, info} from "./http/userAPI";
 import {Context} from "./index";
 import {ChatPage} from "./pages/ChatPage";
 import {Login} from "./pages/Login";
@@ -17,6 +17,13 @@ import ReactLoading from "react-loading"
 import {ErrorPage} from "./pages/ErrorPage";
 import {AdminPage} from "./pages/AdminPage";
 
+export const avatarPicture = (user) => {
+    if (user.avatar) {
+        return "http://localhost:8080/api/media/" + user.avatar.id
+    } else {
+        return "https://bootdey.com/img/Content/avatar/avatar6.png"
+    }
+}
 
 const App = observer(() => {
     const {user} = useContext(Context)
@@ -26,10 +33,12 @@ const App = observer(() => {
             info().then(data => {
                 user.setUser(data.data);
                 user.setIsAuth(true);
+                console.log(getToken())
             }).catch()
                 .finally(() => setLoading(false))
         },);
     }, [])
+
 
     if (loading) {
         return (<div className={"d-flex min-vh-100 align-items-center justify-content-center"}><ReactLoading
