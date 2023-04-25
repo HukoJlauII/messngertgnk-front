@@ -3,19 +3,15 @@ import logo from "../assets/img/logo.png";
 import dayjs from "dayjs";
 import {useContext} from "react";
 import {Context} from "../index";
-import {logout} from "../http/userAPI";
+import {Sock} from "../App";
 
 export const Header = () => {
     const {user} = useContext(Context)
     const logoutUser = async () => {
-        // localStorage.removeItem('token')
+        localStorage.removeItem('token')
         user.setUser({})
         user.setIsAuth(false)
-        await logout().then(() => {
-            localStorage.removeItem('token')
-            // user.setUser({})
-            // user.setIsAuth(false)
-        })
+        Sock.close()
 
     }
     return (
@@ -39,14 +35,14 @@ export const Header = () => {
                         <NavLink className="nav-link nav-profile d-flex align-items-center pe-0" to="#"
                                  data-bs-toggle="dropdown">
                             <img src={user.avatarPicture} alt="Profile"
-                                 className="rounded-circle"/>
+                                 className="rounded-circle" style={{width: '36px'}}/>
                             <span className="d-none d-md-block dropdown-toggle ps-2">{user.user.username}</span>
                         </NavLink>
 
                         <ul className="dropdown-menu dropdown-menu-end dropdown-menu-arrow profile">
                             <li className="dropdown-header">
                                 <h6>{user.user.name + ' ' + user.user.surname}</h6>
-                                <span>Зарегистрирован с {dayjs(user.user.registrationDate).format('DD MMM YYYY')}</span>
+                                <span>Зарегистрирован с {dayjs(user.user.registrationDate).format('DD MMMM YYYY')}</span>
                             </li>
                             <li>
                                 <hr className="dropdown-divider"/>

@@ -217,7 +217,7 @@ const UserProfile = observer(() => {
                                                 <div className="row">
                                                     <div className="col-lg-3 col-md-4 label">Зарегистрирован с</div>
                                                     <div
-                                                        className="col-lg-9 col-md-8">{dayjs(user.user.registrationDate).format('DD MMM YYYY')}</div>
+                                                        className="col-lg-9 col-md-8">{dayjs(user.user.registrationDate).locale('ru').format('DD MMMM YYYY')}</div>
                                                 </div>
                                             </div>
 
@@ -393,6 +393,7 @@ const UserProfile = observer(() => {
                 </main>
 
                 <Footer/>
+                {/*<BackToTop/>*/}
             </div>
         );
     }

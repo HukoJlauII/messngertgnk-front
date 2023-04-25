@@ -138,7 +138,7 @@ export const AdminPage = () => {
 
                 </main>
                 <Footer/>
-
+                {/*<BackToTop/>*/}
             </div>
         );
     }

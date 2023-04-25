@@ -16,10 +16,19 @@ import UserProfile from "./pages/UserProfile";
 import ReactLoading from "react-loading"
 import {ErrorPage} from "./pages/ErrorPage";
 import {AdminPage} from "./pages/AdminPage";
+import 'dayjs/locale/ru'
+import dayjs from "dayjs";
+import SockJS from "sockjs-client";
+import {over} from "stompjs";
 
-export const avatarPicture = (user) => {
-    if (user.avatar) {
-        return "http://localhost:8080/api/media/" + user.avatar.id
+export var stompClient
+export let Sock
+
+dayjs.locale('ru')
+
+export const avatarPicture = (userWithAvatar) => {
+    if (userWithAvatar.avatar) {
+        return "http://localhost:8080/api/media/" + userWithAvatar.avatar.id
     } else {
         return "https://bootdey.com/img/Content/avatar/avatar6.png"
     }
@@ -33,7 +42,10 @@ const App = observer(() => {
             info().then(data => {
                 user.setUser(data.data);
                 user.setIsAuth(true);
-                console.log(getToken())
+                Sock = new SockJS('http://localhost:8080/chat');
+                stompClient = over(Sock);
+                stompClient.connect({'user': data.data.username}, setTimeout(() => {
+                }, 500));
             }).catch()
                 .finally(() => setLoading(false))
         },);
@@ -51,6 +63,7 @@ const App = observer(() => {
                     <Routes>
                         {!user.isAuth && <Route path={"*"} Component={Login}/>}
                         {user.isAuth && <Route path={"*"} Component={ErrorPage}/>}
+                        {user.isAuth && <Route path="/" Component={ChatPage}/>}
                         {user.isAuth && <Route path="/home" Component={ChatPage}/>}
                         {user.isAuth && <Route path="/profile" Component={UserProfile}/>}
                         {user.isAdmin && <Route path="/admin" Component={AdminPage}/>}
