@@ -5,10 +5,11 @@ import {Context} from "../index";
 import {Header} from "../components/Header";
 import {SideBar} from "../components/SideBar";
 import {findUsers} from "../http/userAPI";
-import {avatarPicture, stompClient} from "../App";
+import {avatarPicture} from "../App";
 import dayjs from "dayjs";
 import {allMessagesInChat, allUserDialogs, doRequest, removeMessage, updateMessage} from "../http/messagesAPI";
 import {Message} from "../components/Message";
+import {stompClient} from "./Login";
 
 require('dayjs/locale/es')
 var relativeTime = require('dayjs/plugin/relativeTime')

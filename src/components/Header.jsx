@@ -3,11 +3,12 @@ import logo from "../assets/img/logo.png";
 import dayjs from "dayjs";
 import {useContext} from "react";
 import {Context} from "../index";
-import {Sock} from "../App";
+import {Sock} from "../pages/Login";
+
 
 export const Header = () => {
     const {user} = useContext(Context)
-    const logoutUser = async () => {
+    const logoutUser = () => {
         localStorage.removeItem('token')
         user.setUser({})
         user.setIsAuth(false)

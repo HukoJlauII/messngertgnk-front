@@ -6,7 +6,7 @@ import './assets/css/style.css'
 import "./assets/js/main.js"
 import "./assets/css/chat.css"
 import "./assets/vendor/bootstrap-icons/bootstrap-icons.css"
-import {getToken, info} from "./http/userAPI";
+import {info} from "./http/userAPI";
 import {Context} from "./index";
 import {ChatPage} from "./pages/ChatPage";
 import {Login} from "./pages/Login";
@@ -21,8 +21,7 @@ import dayjs from "dayjs";
 import SockJS from "sockjs-client";
 import {over} from "stompjs";
 
-export var stompClient
-export let Sock
+
 
 dayjs.locale('ru')
 
@@ -42,10 +41,7 @@ const App = observer(() => {
             info().then(data => {
                 user.setUser(data.data);
                 user.setIsAuth(true);
-                Sock = new SockJS('http://localhost:8080/chat');
-                stompClient = over(Sock);
-                stompClient.connect({'user': data.data.username}, setTimeout(() => {
-                }, 500));
+
             }).catch()
                 .finally(() => setLoading(false))
         },);
